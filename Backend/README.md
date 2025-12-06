@@ -1,4 +1,3 @@
-```markdown
 # API Documentation – Authentication Service
 
 This document defines the APIs for user and captain registration, authentication, and profile access.  
@@ -12,7 +11,6 @@ All responses are returned in JSON format.
 - **Token Format:** JWT
 - **Token Expiry:** 24 hours
 - **Protected Route Header:**
-
 ```
 Authorization: Bearer <jwt_token>
 ```
@@ -21,14 +19,10 @@ Authorization: Bearer <jwt_token>
 
 ## User APIs
 
----
-
 ### POST `/users/register`
-
-**Purpose**  
 Create a new user account and return an authentication token upon successful registration.
 
-#### Request Body
+**Request Body**
 ```json
 {
   "fullname": {
@@ -40,7 +34,7 @@ Create a new user account and return an authentication token upon successful reg
 }
 ```
 
-#### Validation Rules
+**Validation Rules**
 
 | Field              | Type   | Required | Constraints                       |
 | ------------------ | ------ | -------- | --------------------------------- |
@@ -49,7 +43,7 @@ Create a new user account and return an authentication token upon successful reg
 | email              | string | Yes      | Valid email, minimum 5 characters |
 | password           | string | Yes      | Minimum 6 characters              |
 
-#### Response Codes
+**Response Codes**
 
 | Code | Description                      |
 | ---- | -------------------------------- |
@@ -58,8 +52,7 @@ Create a new user account and return an authentication token upon successful reg
 | 409  | Email already exists             |
 | 500  | Internal server error            |
 
-#### Success Response Example
-
+**Success Response Example**
 ```json
 {
   "token": "<jwt_token>",
@@ -78,12 +71,9 @@ Create a new user account and return an authentication token upon successful reg
 ---
 
 ### POST `/users/login`
-
-**Purpose**  
 Authenticate the user and return a valid JWT token.
 
-#### Request Body
-
+**Request Body**
 ```json
 {
   "email": "vivekghule@example.com",
@@ -91,7 +81,7 @@ Authenticate the user and return a valid JWT token.
 }
 ```
 
-#### Response Codes
+**Response Codes**
 
 | Code | Description           |
 | ---- | --------------------- |
@@ -100,8 +90,7 @@ Authenticate the user and return a valid JWT token.
 | 401  | Invalid credentials   |
 | 500  | Internal server error |
 
-#### Success Response Example
-
+**Success Response Example**
 ```json
 {
   "token": "<jwt_token>",
@@ -119,25 +108,21 @@ Authenticate the user and return a valid JWT token.
 ---
 
 ### GET `/users/profile`
-
-**Purpose**  
 Retrieve authenticated user's profile data.
 
-#### Required Header
-
+**Required Header**
 ```
 Authorization: Bearer <jwt_token>
 ```
 
-#### Response Codes
+**Response Codes**
 
 | Code | Description       |
 | ---- | ----------------- |
 | 200  | Profile retrieved |
 | 401  | Unauthorized      |
 
-#### Success Response Example
-
+**Success Response Example**
 ```json
 {
   "_id": "...",
@@ -153,25 +138,21 @@ Authorization: Bearer <jwt_token>
 ---
 
 ### GET `/users/logout`
-
-**Purpose**  
 Logout the user by invalidating (blacklisting) the token.
 
-#### Required Header
-
+**Required Header**
 ```
 Authorization: Bearer <jwt_token>
 ```
 
-#### Response Codes
+**Response Codes**
 
 | Code | Description       |
 | ---- | ----------------- |
 | 200  | Logout successful |
 | 401  | Unauthorized      |
 
-#### Success Response Example
-
+**Success Response Example**
 ```json
 {
   "message": "User Logout Successfully"
@@ -182,15 +163,10 @@ Authorization: Bearer <jwt_token>
 
 ## Captain APIs
 
----
-
 ### POST `/captain/register`
-
-**Purpose**  
 Register a new captain (driver) along with vehicle details.
 
-#### Request Body
-
+**Request Body**
 ```json
 {
   "fullname": {
@@ -208,7 +184,7 @@ Register a new captain (driver) along with vehicle details.
 }
 ```
 
-#### Validation Rules
+**Validation Rules**
 
 | Field               | Type   | Required | Constraints             |
 | ------------------- | ------ | -------- | ----------------------- |
@@ -221,7 +197,7 @@ Register a new captain (driver) along with vehicle details.
 | vehicle.vehicleType | string | Yes      | `car`, `bike`, or `van` |
 | vehicle.capacity    | number | Yes      | Minimum value: 1        |
 
-#### Response Codes
+**Response Codes**
 
 | Code | Description                     |
 | ---- | ------------------------------- |
@@ -230,8 +206,7 @@ Register a new captain (driver) along with vehicle details.
 | 409  | Captain already exists          |
 | 500  | Internal server error           |
 
-#### Success Response Example
-
+**Success Response Example**
 ```json
 {
   "token": "<jwt_token>",
@@ -259,11 +234,126 @@ Register a new captain (driver) along with vehicle details.
 
 ---
 
+### POST `/captain/login`
+Authenticate the captain and return a valid JWT token.
+
+**Request Body**
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "yourpassword"
+}
+```
+
+**Response Codes**
+
+| Code | Description           |
+| ---- | --------------------- |
+| 200  | Login successful      |
+| 400  | Validation error      |
+| 401  | Invalid credentials   |
+| 500  | Internal server error |
+
+**Success Response Example**
+```json
+{
+  "token": "<jwt_token>",
+  "captain": {
+    "_id": "60f7c2b8e1d2c8a1b8e4d456",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "MH12AB1234",
+      "vehicleType": "car",
+      "capacity": 4
+    },
+    "status": "inactive",
+    "location": {
+      "lat": null,
+      "lng": null
+    }
+  }
+}
+```
+
+---
+
+### GET `/captain/profile`
+Retrieve authenticated captain's profile data.
+
+**Required Header**
+```
+Authorization: Bearer <jwt_token>
+```
+
+**Response Codes**
+
+| Code | Description       |
+| ---- | ----------------- |
+| 200  | Profile retrieved |
+| 401  | Unauthorized      |
+
+**Success Response Example**
+```json
+{
+  "captain": {
+    "_id": "60f7c2b8e1d2c8a1b8e4d456",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "MH12AB1234",
+      "vehicleType": "car",
+      "capacity": 4
+    },
+    "status": "inactive",
+    "location": {
+      "lat": null,
+      "lng": null
+    }
+  }
+}
+```
+
+---
+
+### GET `/captain/logout`
+Logout the captain by invalidating (blacklisting) the token.
+
+**Required Header**
+```
+Authorization: Bearer <jwt_token>
+```
+
+**Response Codes**
+
+| Code | Description       |
+| ---- | ----------------- |
+| 200  | Logout successful |
+| 401  | Unauthorized      |
+
+**Success Response Example**
+```json
+{
+  "message": "Logout successfully"
+}
+```
+
+---
+
 ## General Notes
 
 * All responses are in standardized JSON format.
 * Passwords are hashed using secure encryption algorithms.
 * A valid JWT token must be included in the Authorization header for protected endpoints.
 * Error responses include messages for easier debugging.
+* Vehicle type allowed values: `car`, `bike`, `van` (see route validation).
 
 ---
